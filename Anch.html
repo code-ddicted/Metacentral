@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anchor Link - Login</title>
+    <script src="https://unpkg.com/anchor-link@3"></script>
+    <script src="https://unpkg.com/anchor-link-browser-transport@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        const identifier = 'example'
+        const transport = new AnchorLinkBrowserTransport()
+        const link = new AnchorLink({
+            transport,
+            chains: [
+                    {
+                        chainId: '1064487b3cd1a897ce03ae5b6a865651747e2e152090f99c1d19d44e01aea5a4',
+                        nodeUrl: 'https://wax.greymass.com',
+                    }    
+                ]
+        })
+        // the session instance, either restored using link.restoreSession() or created with link.login()
+        let session
+
+        //restore session onload
+        function restoreSession() {
+            link.restoreSession(identifier).then((result) => {
+                session = result
+                if (session) {
+                    didLogin()
+                }
+            })
+        }
+        //set DOM elements
+        function loginSuccess(){
+            document.querySelector('#content > div:nth-child(1) > div > h5').innerText = session.auth.actor;
+            //document.getElementById('debug').textContent = Object.keys(session);
+            console.log(session.auth.actor)
+        }
+        // login and store session if sucessful
+        function login() {
+            link.login(identifier).then((result) => {
+                session = result.session
+                loginSuccess()
+            })
+            console.log(session)
+        }
+        //logout
+        function logout(){
+            session.remove()
+            document.querySelector('#content > div:nth-child(1) > div > h5').innerText = "wax user";
+        }
+        //download anchor
+        function down(e){
+            //alert(e)
+            window.location.href = e;
+        }
+    </script>
+
+    <style>
+        body{
+            height: 100%;
+            width: 100%;
+            background-color: #535d80;
+        }
+        nav {
+            padding: 5%;
+            
+        }
+        .btn {
+            height: 30px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #head {
+            height: 3%;
+            background-color: #2f3855;
+        }
+        #content {
+            display: flex;
+            height: 500px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        .card{
+              display: flex; align-items: center; justify-content: center;
+              background-color: #ee4e96;;
+              height: auto;
+              width: 50px;
+              margin: 3px;
+              border-radius: 30px;
+        }
+        img {
+            height: 30px;
+            width: 30px;
+            margin: 2px;
+        }
+        #card-content{
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        #download-icons {
+            display: flex;
+            justify-content: center; align-items: center;
+            flex-direction: column;
+        }
+        #uname {
+            color: cornsilk;
+        }
+        #control-buttons{
+            display: flex; flex-direction: row;
+        }
+        #download {
+            padding: 10px;
+            color: black;
+        }
+        #apple {
+            height: 60px;
+            width: 60px;
+            margin-left: 30%;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        #eosnation{
+            height: 30px;
+            width: 40px;
+        }
+        #uname {
+            color: black;
+        }
+        #prof-png {
+            
+        }
+
+    </style>
+</head>
+<body>
+    <div id="head">
+        <nav class="navbar navbar-dark bg-dark">
+            <div>
+            <img id="eosnation" src="https://eosnation.io/wp-content/uploads/2019/02/EOS-Nation-Logo-White.png" alt="EOS Nation | EOS Block Producer" class="is-logo-image lazyloaded" data-ll-status="loaded">
+            </div>
+    
+            <div id="control-buttons">
+                <button type="button" class="btn btn-info" onclick="login()">Login</button>
+                <button type="button" class="btn btn-danger" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+    </div>
+    <div id="content">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body" id="card-content">
+                <img id="prof-png" src="https://img.icons8.com/material-outlined/50/000000/user.png"/>
+              <h5 class="card-title" id="uname">Card title</h5>
+            </div>
+        </div>
+        <div id="download" class="card" style="width: 18rem;">
+            <div class="card-body" id="download-icons">
+                <div>
+                    <h5 class="card-title">Download Anchor Wallet</h5>
+                </div>
+                <div>
+                    <img onclick="down(this.id)" id="https://github.com/greymass/anchor/releases/download/v1.2.6/win-anchor-wallet-1.2.6.exe" target="_blank" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAgMTJWMy4zNTRMMTAgMS45OTlWMTJIMFpNMTEgMTJIMjRWMEwxMSAxLjgwN1YxMlpNMTAgMTNIMFYyMC42NDZMMTAgMjIuMDAxVjEzWk0xMSAxM1YyMi4xOTRMMjQgMjRWMTNIMTFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" alt="windows">
+                    <img onclick="down(this.id)" id="https://github.com/greymass/anchor/releases/download/v1.2.6/mac-anchor-wallet-1.2.6.dmg" target="_blank" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyMCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwIDE3LjYwNzZDMTkuMjE0IDE5Ljg4NzYgMTYuODYxIDIzLjkyNDggMTQuNDM3IDIzLjk2ODhDMTIuODI5IDIzLjk5OTggMTIuMzEyIDIzLjAxNTcgMTAuNDc0IDIzLjAxNTdDOC42MzcgMjMuMDE1NyA4LjA2MiAyMy45Mzg4IDYuNTQyIDIzLjk5ODhDMy45NyAyNC4wOTc4IDAgMTguMTcxNiAwIDEzLjAwMzRDMCA4LjI1NjI3IDMuMzA4IDUuOTAzMTkgNi4xOTggNS44NjAxOUM3Ljc0OCA1LjgzMjE5IDkuMjEyIDYuOTA1MjIgMTAuMTU3IDYuOTA1MjJDMTEuMTA2IDYuOTA1MjIgMTIuODg0IDUuNjE1MTggMTQuNzUzIDUuODA0MTlDMTUuNTM1IDUuODM3MTkgMTcuNzMyIDYuMTE5MiAxOS4xNDIgOC4xODEyNkMxNS40MDEgMTAuNjIzMyAxNS45ODQgMTUuNzMwNSAyMCAxNy42MDc2Wk0xNC43NzggMEMxMS45NTIgMC4xMTQwMDQgOS42NDYgMy4wNzkxIDkuOTY4IDUuNTMxMThDMTIuNTggNS43MzQxOSAxNS4wODYgMi44MDYwOSAxNC43NzggMFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="macOS">
+                    <img onclick="down(this.id)" id="https://github.com/greymass/anchor/releases" target="_blank" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAxOCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjU4MSAxOS4wNDlDMTcuMDMxIDE4LjYwMyAxNy4yNDUgMTcuNjE4IDE2LjY3NCAxNy4xMzJDMTcuMjI3IDEzLjc2NyAxNS42NzcgMTAuODAxIDEzLjgyOSA4LjlDMTIuMjc4IDcuMzA1IDEyLjc3OCA1Ljc1MyAxMi43NzggNC40MUMxMi43NzggMi4yNjQgMTEuODk3IDAgOS4yMjggMEM2LjM3NSAwIDUuNTkzIDIuMzggNS41NjUgMy43MzhDNS40OTcgNyA2LjIyNCA3Ljg0OCA0LjMxNSAxMC4yMjJDMi4wNjkgMTMuMDE1IDEuNzM4IDE1LjgwMSAyLjI0NSAxNy4yNzlDMi4wMDggMTcuNTU1IDEuNjg4IDE3Ljg2MSAxLjA5IDE4LjExNEMtMC41NjIgMTguODM0IDAuNjQ5IDIwLjAzOSAwLjE5MiAyMC44OTRDMC4wNjE5OTk5IDIxLjEzNyAwIDIxLjM5MSAwIDIxLjYzNEMwIDIyLjM4NCAwLjU5NiAyMy4wMzMgMS42NzkgMjIuOTM2QzMuMTQgMjIuODA2IDQuNDg4IDIzLjg0MSA1LjM2IDIzLjg0MUM2LjEzIDIzLjg0MSA2Ljc2MiAyMy40MDMgNy4wNTYgMjIuOEM4LjQzMyAyMi40NjEgMTAuMTMzIDIyLjUwNCAxMS41MDkgMjIuODU5QzExLjc1NiAyMy41NSAxMi40MjYgMjQgMTMuMTcxIDI0QzE0LjgwMiAyNCAxNS4xMTYgMjIuMTUxIDE2Ljk4NyAyMS41MjVDMTcuNjYxIDIxLjMgMTggMjAuNjQ2IDE4IDIwLjAzN0MxOCAxOS42NDcgMTcuODYxIDE5LjI3NiAxNy41ODEgMTkuMDQ5Wk04LjQzNCA4LjU4NEM4LjExNSA4LjU4NCA3Ljg1MSA4LjMyNiA3LjQzNCA4LjAxNkM2LjkwNiA3LjYyNCA2LjM2OSA3LjM5OCA2LjM3NSA2Ljk4NkM2LjM3NSA2LjcwMyA2Ljc1NCA2LjYxNiA3LjI0NCA2LjMwNUM3Ljc3IDUuOTcyIDcuOTc1IDUuNjM0IDguNDkzIDUuNjM0QzkuMDIzIDUuNjM0IDkuMTgzIDUuOTAyIDkuOTAzIDYuMjEzQzEwLjYxMSA2LjUyIDExLjEwNCA2LjY0IDExLjEwNCA2Ljk4NkMxMS4xMDQgNy4zNDEgMTAuMzYzIDcuNTk1IDkuOTQ2IDcuODU0QzkuMzMzIDguMjMyIDkuMDE4IDguNTg0IDguNDM0IDguNTg0Wk0xMC4wOTkgMy4zNjlDMTAuOTgxIDMuNTEgMTEuMDggNS4wNiAxMC42NTggNS44MjNMMTAuMzAzIDUuNjc4QzEwLjQ4NyA1LjEzNSAxMC40ODQgNC4yNDEgOS44NjggNC4xODRDOS40NzcgNC4xNDggOS4yMjUgNC42NjQgOS4xNzEgNS4xMDZDOS4wMTggNS4wNDIgOC44NTEgNC45OTYgOC42NDggNC45NzlDOC43MSA0LjA1NiA5LjMwNiAzLjI0MiAxMC4wOTkgMy4zNjlaTTYuNjk2IDMuN0M3LjM3MiAzLjUzMiA3Ljc3MSA0LjMxOCA3Ljc3NCA1LjEzNUw3LjQ2NCA1LjMyNUM3LjQyMiA0Ljk4MiA3LjI2OSA0LjQyOCA2Ljg4NSA0LjU0NkM2LjQ3NCA0LjY3NCA2LjU0MSA1LjYyOSA2Ljc3IDUuODI1TDYuNDY0IDUuOTk1QzYuMDQ0IDUuMjg4IDYuMDQ1IDMuODYyIDYuNjk2IDMuN1pNNC41ODEgMjIuOTQzQzIuNjE4IDIyLjA1IDEuOTUxIDIyLjI1MyAxLjU3NiAyMi4yNTNDMC43OTkgMjIuMjUzIDAuNTQ1IDIxLjY3NCAwLjgzNyAyMS4xMjZDMS4wODUgMjAuNjYxIDEuMDA4IDIwLjE3NCAwLjk0NyAxOS43ODNDMC44NTMgMTkuMTg0IDAuODM2IDE4Ljk4OSAxLjQyNSAxOC43MzFDMi4yNCAxOC4zODUgMi42MDIgMTcuOTQgMi44NzIgMTcuNjA3QzMuNjMgMTYuNjcgNC4zOTUgMTguMTQ0IDUuMDIyIDE5LjQ1N0M1LjQyOSAyMC4zMDggNi4yMyAyMC43MzkgNi40NzcgMjEuNjgyQzYuNzA0IDIyLjU1MyA1Ljc2NyAyMy40ODMgNC41ODEgMjIuOTQzWk0xMS41NjggMjEuMDY5QzEwLjE4NCAyMS43NDIgOC40MjEgMjIuMDUxIDcuMTAyIDIxLjM2OEM2LjkwNyAyMC44MDUgNi41OTUgMjAuNDQxIDYuMjU5IDIwLjA3NUM2Ljc5OCAxOS45MzMgNy4xOTggMTkuMjYxIDYuNzE5IDE4LjU4NkM2LjIwOCAxNy44NjUgNS4xNjQgMTcuMzYyIDQuMTA5IDE2LjU0NkMzLjEyMiAxNS43ODMgMi44MSAxMy45MDIgNC4xNTQgMTEuOEMzLjQ5OSAxMy42NjIgMy44ODIgMTUuMzc4IDQuMjExIDE1Ljg2OUM0LjI3OSAxNC44ODEgNC4zNTcgMTMuMjMxIDUuNzA3IDExLjI1NEM2LjM4OCAxMC4yNTYgNi4zOTggOC45MzggNi40MTMgOC4xMTRMNy4wMzMgOC41MzhDNy40ODkgOC44NzUgNy44NzEgOS4yNDYgOC40MTkgOS4yNDZDOS4yMjkgOS4yNDYgOS42NzcgOC43OCAxMC4zMDEgOC4zOTNDMTAuNTQ1IDguMjQzIDEwLjkxNCA4LjA5MSAxMS4yMjQgNy44OEMxMS43NDQgMTAuMzU2IDEzLjg5OCAxMy4zMzQgMTQuMDE5IDE1LjAzQzE0LjUyIDEzLjk5OCAxMy44NzcgMTEuNTE2IDEzLjg3NyAxMS41MTZDMTQuNzE5IDEyLjgwMSAxNC43ODYgMTMuODcyIDE0LjgyMyAxNS4xODZDMTUuNDEyIDE1LjQyNyAxNi4wNDQgMTYuMDU1IDE2LjEwMiAxNi44ODJMMTUuODU3IDE2Ljg1NEMxNS43MzEgMTUuOTM1IDEzLjI1IDE0LjU4NSAxMy4wMjcgMTYuMzE1QzExLjgzNyAxNi40OTYgMTIuMjcgMTguMzgxIDEyLjAzIDE5LjYwM0MxMS45MiAyMC4xNjIgMTEuNzE2IDIwLjYwNCAxMS41NjggMjEuMDY5Wk0xNi40MTQgMjEuMDI4QzE1LjQyOSAyMS40MDggMTQuNzY0IDIyLjIxNSAxNC4zMDcgMjIuNzE2QzEzLjQyNyAyMy42ODIgMTIuMjYzIDIzLjIxOSAxMi4xMzkgMjIuMzE1QzEyLjAwOCAyMS4zNDkgMTIuNDk5IDIwLjgyMiAxMi43MTEgMTkuNzQxQzEyLjkwNCAxOC43NTQgMTIuNjg4IDE3LjIzNSAxMy4xNDIgMTcuMDczQzEzLjQzNyAxOC44MjYgMTUuMjA4IDE4LjA4OSAxNS42MTIgMTcuNjExQzE2LjI2OSAxNy42MTEgMTYuMzI0IDE3LjgzMyAxNi40NzEgMTguNDQ4QzE2LjU2MyAxOC44MzMgMTYuNjkgMTkuMTU3IDE3LjA0OSAxOS41MzhDMTcuNDY3IDE5Ljk4NSAxNy4zMzkgMjAuNjcxIDE2LjQxNCAyMS4wMjhaTTguNDE0IDguMDIyQzcuNzYzIDguMDIyIDcuMjc2IDcuNTg5IDYuODggNy4yNTNDNi42NzcgNy4wODIgNi45MyA2Ljc2NiA3LjEzMyA2LjkzOEM3LjUyIDcuMjY2IDcuOTEgNy42MTMgOC40MTQgNy42MTNDOS4wMjEgNy42MTMgOS41NTYgNy4wOTQgMTAuMjgxIDYuODA4QzEwLjUyOCA2LjcxMSAxMC42NjkgNy4wOTMgMTAuNDI0IDcuMTlDOS43MiA3LjQ2NyA5LjE1NSA4LjAyMiA4LjQxNCA4LjAyMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="linux">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
